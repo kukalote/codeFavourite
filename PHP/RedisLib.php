@@ -19,7 +19,7 @@ class RedisLib
     public static function getCache($key, $groupKey)
     {
         $groupFlag = self::getGroupFlag($groupKey);
-        $value     = static::cache()->get("{$key}:{$groupFlag}");
+        $value     = static::cache()->get("{$groupKey}:{$key}:{$groupFlag}");
         return json_decode($value);
     }
 
@@ -42,7 +42,7 @@ class RedisLib
         // 如果 value 为空，则保存空值 10 秒，防止频繁查库
         $expire = is_null($value) ? self::WHILE_TIME : $expire;
 
-        static::cache()->set("{$key}:{$groupFlag}", $value, $expire);
+        static::cache()->set("{$groupKey}:{$key}:{$groupFlag}", $value, $expire);
         return $value;
     }
 
@@ -73,7 +73,7 @@ class RedisLib
     public static function delCache($key, $groupKey)
     {
         $groupFlag = self::getGroupFlag($groupKey);
-        return self::cache()->del("{$key}:{$groupFlag}");
+        return self::cache()->del("{$groupKey}:{$key}:{$groupFlag}");
     }
 
     /**
